@@ -243,7 +243,7 @@ export class TokenProvider {
     async fetchPrices(): Promise<Prices> {
         try {
             const cacheKey = "prices";
-            const cachedData = this.getCachedData<Prices>(cacheKey);
+            const cachedData = await this.getCachedData<Prices>(cacheKey);
             if (cachedData) {
                 console.log("Returning cached prices.");
                 return cachedData;
@@ -289,6 +289,9 @@ export class TokenProvider {
     async calculateBuyAmounts(): Promise<CalculatedBuyAmounts> {
         const dexScreenerData = await this.fetchDexScreenerData();
         const prices = await this.fetchPrices();
+
+        console.log("PRICE: ", prices, dexScreenerData);
+
         const solPrice = toBN(prices.solana.usd);
 
         if (!dexScreenerData || dexScreenerData.pairs.length === 0) {
@@ -394,6 +397,8 @@ export class TokenProvider {
         if (!data?.success || !data?.data) {
             throw new Error("No token trade data available");
         }
+
+        console.log("RETURNED DATA: ", data);
 
         const tradeData: TokenTradeData = {
             address: data.data.address,
@@ -605,7 +610,7 @@ export class TokenProvider {
 
     async fetchDexScreenerData(): Promise<DexScreenerData> {
         const cacheKey = `dexScreenerData_${this.tokenAddress}`;
-        const cachedData = this.getCachedData<DexScreenerData>(cacheKey);
+        const cachedData = await this.getCachedData<DexScreenerData>(cacheKey);
         if (cachedData) {
             console.log("Returning cached DexScreener data.");
             return cachedData;
