@@ -135,7 +135,7 @@
 
         "enableRecording": false,
 
-        "voiceId": "21m00Tcm4TlvDq8ikWAM",
+        "voiceId": "YI5bDiiDOYHHb2eLadHv",
         "sttLanguage": "en",
         "gptModel": "gpt-3.5-turbo",
         "systemPrompt": "You are a helpful AI co-host assistant.",
