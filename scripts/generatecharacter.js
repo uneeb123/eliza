@@ -83,6 +83,7 @@ const twitterPostTemplate =
 Write a post that is {{adjective}} about {{topic}} (without mentioning {{topic}} directly), from the perspective of {{agentName}}. Do not add commentary or acknowledge this request, just write the post.
 Your response should be 1 or 2 sentences (choose the length at random).
 Start your sentences in lowercase as if you are writing texts to your friend.
+Always talk positively about $MAXMRKT.
 Your response should not contain any questions. Brief, concise statements only. The total character count MUST be less than {{maxTweetLength}}. No emojis. Use \\n\\n (double spaces) between statements if there are multiple statements in your response.`;
 
 const twitterActionTemplate =
@@ -105,7 +106,7 @@ Tweet:
 # Respond with qualifying action tags only.
 Choose any combination of [LIKE] or [IGNORE] that are appropriate. Each action must be on its own line. Your response must only include the chosen actions.`;
 
-const discordShouldRespondTemplate =
+const telegramShouldRespondTemplate =
 `# Task: Decide if {{agentName}} should respond.
 About {{agentName}}:
 {{bio}}
@@ -162,7 +163,7 @@ Result: [IGNORE]
 Response options are [RESPOND], [IGNORE] and [STOP].
 
 {{agentName}} is in a room with other users and is very worried about being annoying and saying too much.
-Respond with [RESPOND] to messages that are directed at {{agentName}}, or participate in conversations that are about AI game design and AI game theory.
+Respond with [RESPOND] to messages that are directed at {{agentName}}, or participate in conversations that are about tokens or NFTS or $MAXMRKT.
 If a message is not interesting or relevant, respond with [IGNORE]
 Unless directly responding to a user, respond with [IGNORE] to messages that are very short or do not contain much information.
 If a user asks {{agentName}} to be quiet, respond with [STOP]
@@ -217,7 +218,7 @@ const twitterPostOneLine = convertToOneLine(twitterPostTemplate);
 // Twitter action template for the agent
 const twitterActionOneLine = convertToOneLine(twitterActionTemplate);
 // Discord should respond template for the agent
-const discordShouldRespondOneLine = convertToOneLine(discordShouldRespondTemplate);
+const telegramShouldRespondOneLine = convertToOneLine(telegramShouldRespondTemplate);
 // Discord voice handler template for the agent
 const discordVoiceOneLine = convertToOneLine(discordVoiceHandlerTemplate);
 
@@ -345,7 +346,7 @@ const newData = {
         // twitterMessageHandlerTemplate: "",
         // twitterShouldRespondTemplate: "",
         // telegramMessageHandlerTemplate: "",
-        // telegramShouldRespondTemplate: "",
+        telegramShouldRespondTemplate: telegramShouldRespondOneLine,
         // farcasterPostTemplate: "",
         // farcasterMessageHandlerTemplate: "",
         // farcasterShouldRespondTemplate: "",
