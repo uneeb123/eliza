@@ -290,8 +290,6 @@ export class TokenProvider {
         const dexScreenerData = await this.fetchDexScreenerData();
         const prices = await this.fetchPrices();
 
-        console.log("PRICE: ", prices, dexScreenerData);
-
         const solPrice = toBN(prices.solana.usd);
 
         if (!dexScreenerData || dexScreenerData.pairs.length === 0) {
@@ -397,8 +395,6 @@ export class TokenProvider {
         if (!data?.success || !data?.data) {
             throw new Error("No token trade data available");
         }
-
-        console.log("RETURNED DATA: ", data);
 
         const tradeData: TokenTradeData = {
             address: data.data.address,

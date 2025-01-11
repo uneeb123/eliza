@@ -128,6 +128,7 @@ export class TelegramClient {
                     }
                 }
 
+                console.log("messageManager.handleMessage", ctx);
                 await this.messageManager.handleMessage(ctx);
             } catch (error) {
                 elizaLogger.error("❌ Error handling message:", error);

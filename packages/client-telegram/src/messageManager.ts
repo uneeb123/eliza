@@ -1,6 +1,11 @@
 import { Message } from "@telegraf/types";
 import { Context, Telegraf } from "telegraf";
-import { composeContext, elizaLogger, ServiceType, composeRandomUser } from "@elizaos/core";
+import {
+    composeContext,
+    elizaLogger,
+    ServiceType,
+    composeRandomUser,
+} from "@elizaos/core";
 import { getEmbeddingZeroVector } from "@elizaos/core";
 import {
     Content,
@@ -1058,6 +1063,7 @@ export class MessageManager {
                         telegramMessageHandlerTemplate,
                 });
 
+                console.log("generateResponse: ", memory, state, context);
                 const responseContent = await this._generateResponse(
                     memory,
                     state,
