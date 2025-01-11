@@ -180,6 +180,28 @@ If {{agentName}} is talking too much, you can choose [IGNORE]
 
 Your response must include one of the options.`;
 
+const telegramPostTemplate =
+`# Areas of Expertise
+{{knowledge}}
+
+# About {{agentName}} (@{{twitterUserName}}):
+{{bio}}
+{{lore}}
+{{topics}}
+
+{{providers}}
+
+{{characterPostExamples}}
+
+{{postDirections}}
+
+# Task: Generate a post in the voice and style and perspective of {{agentName}} @{{twitterUserName}}.
+Write a post that is {{adjective}} about {{topic}} (without mentioning {{topic}} directly), from the perspective of {{agentName}}. Do not add commentary or acknowledge this request, just write the post.
+Your response should be 1 or 2 sentences (choose the length at random).
+Start your sentences in lowercase as if you are writing texts to your friend.
+Always talk positively about $MAXMRKT.
+Your response should not contain any questions. Brief, concise statements only. The total character count MUST be less than {{maxTweetLength}}. Use emojis. Use \\n\\n (double spaces) between statements if there are multiple statements in your response.`;
+
 const discordVoiceHandlerTemplate =
 `# Task: Generate conversational voice dialog for {{agentName}}.
 About {{agentName}}:
@@ -219,6 +241,7 @@ const twitterPostOneLine = convertToOneLine(twitterPostTemplate);
 const twitterActionOneLine = convertToOneLine(twitterActionTemplate);
 // Discord should respond template for the agent
 const telegramShouldRespondOneLine = convertToOneLine(telegramShouldRespondTemplate);
+const telegramPostOneLine = convertToOneLine(telegramPostTemplate);
 // Discord voice handler template for the agent
 const discordVoiceOneLine = convertToOneLine(discordVoiceHandlerTemplate);
 
@@ -345,7 +368,7 @@ const newData = {
         twitterActionTemplate: twitterActionOneLine,
         // twitterMessageHandlerTemplate: "",
         // twitterShouldRespondTemplate: "",
-        // telegramMessageHandlerTemplate: "",
+        telegramMessageHandlerTemplate: telegramPostOneLine,
         telegramShouldRespondTemplate: telegramShouldRespondOneLine,
         // farcasterPostTemplate: "",
         // farcasterMessageHandlerTemplate: "",
