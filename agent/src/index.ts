@@ -385,6 +385,7 @@ function initializeDatabase(dataDir: string) {
     }
 }
 
+// start a client and start listening
 // also adds plugins from character file into the runtime
 export async function initializeClients(
     character: Character,
@@ -670,6 +671,7 @@ function initializeCache(
     }
 }
 
+// for each agent, initialize db, cache and clients
 async function startAgent(
     character: Character,
     directClient: DirectClient
@@ -749,6 +751,7 @@ const checkPortAvailable = (port: number): Promise<boolean> => {
     });
 };
 
+// start agents for each character
 const startAgents = async () => {
     const directClient = new DirectClient();
     let serverPort = parseInt(settings.SERVER_PORT || "3000");
