@@ -1063,7 +1063,6 @@ export class MessageManager {
                         telegramMessageHandlerTemplate,
                 });
 
-                console.log("generateResponse: ", memory, state, context);
                 const responseContent = await this._generateResponse(
                     memory,
                     state,

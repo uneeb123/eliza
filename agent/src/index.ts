@@ -1,10 +1,6 @@
-import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
+// import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
 import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
 import { AutoClientInterface } from "@elizaos/client-auto";
-import { DiscordClientInterface } from "@elizaos/client-discord";
-import { FarcasterAgentClient } from "@elizaos/client-farcaster";
-import { LensAgentClient } from "@elizaos/client-lens";
-import { SlackClientInterface } from "@elizaos/client-slack";
 import { TelegramClientInterface } from "@elizaos/client-telegram";
 import { TwitterClientInterface } from "@elizaos/client-twitter";
 import {
@@ -26,44 +22,18 @@ import {
     CacheStore,
     Client,
     ICacheManager,
-    parseBooleanFromText,
 } from "@elizaos/core";
-import { RedisClient } from "@elizaos/adapter-redis";
-import { zgPlugin } from "@elizaos/plugin-0g";
+// import { RedisClient } from "@elizaos/adapter-redis";
 import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
-import createGoatPlugin from "@elizaos/plugin-goat";
-// import { intifacePlugin } from "@elizaos/plugin-intiface";
 import { DirectClient } from "@elizaos/client-direct";
-import { aptosPlugin } from "@elizaos/plugin-aptos";
-import {
-    advancedTradePlugin,
-    coinbaseCommercePlugin,
-    coinbaseMassPaymentsPlugin,
-    tokenContractPlugin,
-    tradePlugin,
-    webhookPlugin,
-} from "@elizaos/plugin-coinbase";
-import { confluxPlugin } from "@elizaos/plugin-conflux";
-import { evmPlugin } from "@elizaos/plugin-evm";
-import { storyPlugin } from "@elizaos/plugin-story";
-import { flowPlugin } from "@elizaos/plugin-flow";
-import { fuelPlugin } from "@elizaos/plugin-fuel";
-import { imageGenerationPlugin } from "@elizaos/plugin-image-generation";
-import { ThreeDGenerationPlugin } from "@elizaos/plugin-3d-generation";
-import { multiversxPlugin } from "@elizaos/plugin-multiversx";
-import { nearPlugin } from "@elizaos/plugin-near";
-import { nftGenerationPlugin } from "@elizaos/plugin-nft-generation";
+// import { evmPlugin } from "@elizaos/plugin-evm";
+// import { ThreeDGenerationPlugin } from "@elizaos/plugin-3d-generation";
+// import { imageGenerationPlugin } from "@elizaos/plugin-image-generation";
+// import { nftGenerationPlugin } from "@elizaos/plugin-nft-generation";
 import { createNodePlugin } from "@elizaos/plugin-node";
-import { solanaPlugin } from "@elizaos/plugin-solana";
-import { suiPlugin } from "@elizaos/plugin-sui";
-import { TEEMode, teePlugin } from "@elizaos/plugin-tee";
-import { tonPlugin } from "@elizaos/plugin-ton";
-import { zksyncEraPlugin } from "@elizaos/plugin-zksync-era";
-import { cronosZkEVMPlugin } from "@elizaos/plugin-cronoszkevm";
-import { abstractPlugin } from "@elizaos/plugin-abstract";
-import { avalanchePlugin } from "@elizaos/plugin-avalanche";
+// import { solanaPlugin } from "@elizaos/plugin-solana";
+// import { TEEMode, teePlugin } from "@elizaos/plugin-tee";
 import { webSearchPlugin } from "@elizaos/plugin-web-search";
-import { echoChamberPlugin } from "@elizaos/plugin-echochambers";
 import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
@@ -358,6 +328,8 @@ export function getTokenForProvider(
 
 function initializeDatabase(dataDir: string) {
     if (process.env.POSTGRES_URL) {
+        // TODO: enable POSTGRES if we need to switch
+        /*
         elizaLogger.info("Initializing PostgreSQL connection...");
         const db = new PostgresDatabaseAdapter({
             connectionString: process.env.POSTGRES_URL,
@@ -376,6 +348,7 @@ function initializeDatabase(dataDir: string) {
             });
 
         return db;
+        */
     } else {
         const filePath =
             process.env.SQLITE_FILE ?? path.resolve(dataDir, "db.sqlite");
@@ -403,11 +376,6 @@ export async function initializeClients(
         if (autoClient) clients.auto = autoClient;
     }
 
-    if (clientTypes.includes(Clients.DISCORD)) {
-        const discordClient = await DiscordClientInterface.start(runtime);
-        if (discordClient) clients.discord = discordClient;
-    }
-
     if (clientTypes.includes(Clients.TELEGRAM)) {
         const telegramClient = await TelegramClientInterface.start(runtime);
         if (telegramClient) clients.telegram = telegramClient;
@@ -420,29 +388,7 @@ export async function initializeClients(
         }
     }
 
-    if (clientTypes.includes(Clients.FARCASTER)) {
-        // why is this one different :(
-        const farcasterClient = new FarcasterAgentClient(runtime);
-        if (farcasterClient) {
-            farcasterClient.start();
-            clients.farcaster = farcasterClient;
-        }
-    }
-    if (clientTypes.includes("lens")) {
-        const lensClient = new LensAgentClient(runtime);
-        lensClient.start();
-        clients.lens = lensClient;
-    }
-
     elizaLogger.log("client keys", Object.keys(clients));
-
-    // TODO: Add Slack client to the list
-    // Initialize clients as an object
-
-    if (clientTypes.includes("slack")) {
-        const slackClient = await SlackClientInterface.start(runtime);
-        if (slackClient) clients.slack = slackClient; // Use object property instead of push
-    }
 
     function determineClientType(client: Client): string {
         // Check if client has a direct type identifier
@@ -501,6 +447,7 @@ export async function createAgent(
     const teeMode = getSecret(character, "TEE_MODE") || "OFF";
     const walletSecretSalt = getSecret(character, "WALLET_SECRET_SALT");
 
+    /* TODO: enable TEE mode
     // Validate TEE configuration
     if (teeMode !== TEEMode.OFF && !walletSecretSalt) {
         elizaLogger.error(
@@ -508,14 +455,7 @@ export async function createAgent(
         );
         throw new Error("Invalid TEE configuration");
     }
-
-    let goatPlugin: any | undefined;
-
-    if (getSecret(character, "EVM_PRIVATE_KEY")) {
-        goatPlugin = await createGoatPlugin((secret) =>
-            getSecret(character, secret)
-        );
-    }
+    */
 
     return new AgentRuntime({
         databaseAdapter: db,
@@ -526,26 +466,25 @@ export async function createAgent(
         // character.plugins are handled when clients are added
         plugins: [
             bootstrapPlugin,
-            getSecret(character, "CONFLUX_CORE_PRIVATE_KEY")
-                ? confluxPlugin
-                : null,
-            nodePlugin,
             getSecret(character, "TAVILY_API_KEY") ? webSearchPlugin : null,
+            /* TODO: enable trading on Solana chain
+
             getSecret(character, "SOLANA_PUBLIC_KEY") ||
             (getSecret(character, "WALLET_PUBLIC_KEY") &&
                 !getSecret(character, "WALLET_PUBLIC_KEY")?.startsWith("0x"))
                 ? solanaPlugin
                 : null,
-            (getSecret(character, "NEAR_ADDRESS") ||
-                getSecret(character, "NEAR_WALLET_PUBLIC_KEY")) &&
-            getSecret(character, "NEAR_WALLET_SECRET_KEY")
-                ? nearPlugin
-                : null,
+            */
+            /* TODO: enable trading on EVM chain
+
             getSecret(character, "EVM_PUBLIC_KEY") ||
             (getSecret(character, "WALLET_PUBLIC_KEY") &&
                 getSecret(character, "WALLET_PUBLIC_KEY")?.startsWith("0x"))
                 ? evmPlugin
                 : null,
+            */
+            /* TODO: enable NFT generation
+
             (getSecret(character, "SOLANA_PUBLIC_KEY") ||
                 (getSecret(character, "WALLET_PUBLIC_KEY") &&
                     !getSecret(character, "WALLET_PUBLIC_KEY")?.startsWith(
@@ -556,10 +495,9 @@ export async function createAgent(
             getSecret(character, "SOLANA_ADMIN_PRIVATE_KEY")
                 ? nftGenerationPlugin
                 : null,
-            getSecret(character, "ZEROG_PRIVATE_KEY") ? zgPlugin : null,
-            getSecret(character, "COINBASE_COMMERCE_KEY")
-                ? coinbaseCommercePlugin
-                : null,
+            */
+            /* TODO: enable image generation
+
             getSecret(character, "FAL_API_KEY") ||
             getSecret(character, "OPENAI_API_KEY") ||
             getSecret(character, "VENICE_API_KEY") ||
@@ -567,49 +505,13 @@ export async function createAgent(
             getSecret(character, "LIVEPEER_GATEWAY_URL")
                 ? imageGenerationPlugin
                 : null,
+            */
+            /* TODO: enable 3D and TEE
             getSecret(character, "FAL_API_KEY") ? ThreeDGenerationPlugin : null,
-            ...(getSecret(character, "COINBASE_API_KEY") &&
-            getSecret(character, "COINBASE_PRIVATE_KEY")
-                ? [
-                      coinbaseMassPaymentsPlugin,
-                      tradePlugin,
-                      tokenContractPlugin,
-                      advancedTradePlugin,
-                  ]
-                : []),
             ...(teeMode !== TEEMode.OFF && walletSecretSalt
                 ? [teePlugin, solanaPlugin]
                 : []),
-            getSecret(character, "COINBASE_API_KEY") &&
-            getSecret(character, "COINBASE_PRIVATE_KEY") &&
-            getSecret(character, "COINBASE_NOTIFICATION_URI")
-                ? webhookPlugin
-                : null,
-            goatPlugin,
-            getSecret(character, "ABSTRACT_PRIVATE_KEY")
-                ? abstractPlugin
-                : null,
-            getSecret(character, "FLOW_ADDRESS") &&
-            getSecret(character, "FLOW_PRIVATE_KEY")
-                ? flowPlugin
-                : null,
-            getSecret(character, "APTOS_PRIVATE_KEY") ? aptosPlugin : null,
-            getSecret(character, "MVX_PRIVATE_KEY") ? multiversxPlugin : null,
-            getSecret(character, "ZKSYNC_PRIVATE_KEY") ? zksyncEraPlugin : null,
-            getSecret(character, "CRONOSZKEVM_PRIVATE_KEY")
-                ? cronosZkEVMPlugin
-                : null,
-            getSecret(character, "TON_PRIVATE_KEY") ? tonPlugin : null,
-            getSecret(character, "SUI_PRIVATE_KEY") ? suiPlugin : null,
-            getSecret(character, "STORY_PRIVATE_KEY") ? storyPlugin : null,
-            getSecret(character, "FUEL_PRIVATE_KEY") ? fuelPlugin : null,
-            getSecret(character, "AVALANCHE_PRIVATE_KEY")
-                ? avalanchePlugin
-                : null,
-            getSecret(character, "ECHOCHAMBERS_API_URL") &&
-            getSecret(character, "ECHOCHAMBERS_API_KEY")
-                ? echoChamberPlugin
-                : null,
+            */
         ].filter(Boolean),
         providers: [],
         actions: [],
@@ -641,11 +543,13 @@ function initializeCache(
     switch (cacheStore) {
         case CacheStore.REDIS:
             if (process.env.REDIS_URL) {
+                /* TODO: add redis client
                 elizaLogger.info("Connecting to Redis...");
                 const redisClient = new RedisClient(process.env.REDIS_URL);
                 return new CacheManager(
                     new DbCacheAdapter(redisClient, character.id) // Using DbCacheAdapter since RedisClient also implements IDatabaseCacheAdapter
                 );
+                */
             } else {
                 throw new Error("REDIS_URL environment variable is not set.");
             }
