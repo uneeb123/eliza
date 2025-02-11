@@ -3,6 +3,14 @@
     "clients": ["twitter", "telegram"],
     "modelProvider": "claude_vertex",
     "settings": {
+        "secrets": {
+            "TWITTER_DRY_RUN": "false",
+            "TWITTER_USERNAME": "max_prof1t",
+            "TWITTER_PASSWORD": "cfz2hpe-amz_eym6ERC",
+            "TWITTER_EMAIL": "max@asdf.codes",
+            "TWITTER_2FA_SECRET": "",
+            "TELEGRAM_BOT_TOKEN": "7513311662:AAECyRVsJwK0MX4E8d7dNEpxssxwaTj2GZM"
+        },
         "voice": {
             "model": "en_US-male-medium"
         },
@@ -143,6 +151,14 @@
             "don't dodge questions, being based is about owning your ideas and being confident in them",
             "dive deeper into stuff when its interesting"
         ]
+    },
+    "clientConfig": {
+        "telegram": {
+            "shouldIgnoreBotMessages": false,
+            "shouldIgnoreDirectMessages": false,
+            "isPartOfTeam": false,
+            "shouldRespondOnlyToMentions": false
+        }
     },
     "twitterSpaces": {
         "maxSpeakers": 2,

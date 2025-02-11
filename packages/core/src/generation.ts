@@ -458,6 +458,22 @@ export async function generateText({
                     fetch: runtime.fetch,
                 });
 
+                console.log("GENERATING...");
+                console.log(
+                    context,
+                    runtime.character.system ??
+                        settings.SYSTEM_PROMPT ??
+                        undefined,
+                    tools,
+                    onStepFinish,
+                    maxSteps,
+                    temperature,
+                    max_response_length,
+                    frequency_penalty,
+                    presence_penalty,
+                    experimental_telemetry
+                );
+
                 const { text: anthropicResponse } = await aiGenerateText({
                     model: anthropic.languageModel(model),
                     prompt: context,

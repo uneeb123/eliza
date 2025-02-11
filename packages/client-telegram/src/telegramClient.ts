@@ -103,6 +103,7 @@ export class TelegramClient {
                     return;
                 }
 
+                // asdf: looks like this is false
                 if (this.tgTrader) {
                     const userId = ctx.from?.id.toString();
                     const username =
